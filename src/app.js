@@ -11,7 +11,7 @@ app.use(
     extended: true,
     limit:"16kb"
   })
-);
+); //we use beacuse every url has different url symantics
 app.use(express.static("public"))
 app.use(cookieParser())
 

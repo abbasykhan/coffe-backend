@@ -4,7 +4,7 @@ import { Jwt } from "jsonwebtoken";
 
 const userSchema = new Schema(
   {
-    username: {
+    username: { 
       type: String,
       required: true,
       unique: true,
@@ -53,7 +53,7 @@ userSchema.methods.generateAccessToken = function () {
     {
       _id: this._id,
       _email: this._email,
-      username: this.username,
+      username: this.username,     
       fullname: this.fullname,
     },
     process.env.ACCESS_TOKEN_SECRET,
