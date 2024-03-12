@@ -12,7 +12,7 @@ const userSchema = new Schema(
       trim: true,
       index: true,
     },
-    fullname:{
+    fullName:{
       type: String,
       required: true,
       trim:true,
@@ -55,7 +55,7 @@ userSchema.methods.isPasswordCorrect = async function (password) {
 };
 
 userSchema.methods.generateAccessToken = function () {   //jwt is bearer token, is like a key , when user have this , it can access data easily
-  return jwt.sign(
+  return Jwt.sign(
     {
       _id: this._id,
       _email: this._email,
@@ -69,7 +69,7 @@ userSchema.methods.generateAccessToken = function () {   //jwt is bearer token, 
   );
 };
 userSchema.methods.generateRefreshToken = function () {
-  return jwt.sign(
+  return Jwt.sign(
     {
       _id: this._id,
     },
