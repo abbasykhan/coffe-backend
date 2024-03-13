@@ -1,10 +1,10 @@
 import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcrypt";
-import  Jwt  from "jsonwebtoken";
+import Jwt from "jsonwebtoken";
 
 const userSchema = new Schema(
   {
-    username: { 
+    username: {
       type: String,
       required: true,
       unique: true,
@@ -12,11 +12,11 @@ const userSchema = new Schema(
       trim: true,
       index: true,
     },
-    fullName:{
+    fullName: {
       type: String,
       required: true,
-      trim:true,
-      index:true,
+      trim: true,
+      index: true,
     },
     avatar: {
       type: String, //cloudinary url
@@ -49,35 +49,43 @@ userSchema.pre("save", async function (next) {
 });
 
 userSchema.methods.isPasswordCorrect = async function (password) {
-  {
-    return await bcrypt.compare(password, this.password);
-  }
+  return await bcrypt.compare(password, this.password);
 };
 
-userSchema.methods.generateAccessToken = function () {   //jwt is bearer token, is like a key , when user have this , it can access data easily
-  return Jwt.sign(
-    {
-      _id: this._id,
-      _email: this._email,
-      username: this.username,     
-      fullname: this.fullname,
-    },
-    process.env.ACCESS_TOKEN_SECRET,
-    {
-      expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
-    }
-  );
+userSchema.methods.generateAccessToken = function () {
+  //jwt is bearer token, is like a key , when user have this , it can access data easily
+ try {
+   return Jwt.sign(
+     {
+       _id: this._id,
+       _email: this._email,
+       username: this.username,
+       fullName: this.fullName,
+     },
+     process.env.ACCESS_TOKEN_SECRET,
+     {
+       expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
+     }
+   );
+ } catch (error) {
+  console.error("Error generating access token:", error);
+  
+ }
 };
 userSchema.methods.generateRefreshToken = function () {
-  return Jwt.sign(
-    {
-      _id: this._id,
-    },
-    process.env.REFRESH_TOKEN_SECRET,
-    {
-      expiresIn: process.env.REFRESH_TOKEN_SECRET,
-    }
-  );
+ try {
+   return Jwt.sign(
+     {
+       _id: this._id,
+     },
+     process.env.REFRESH_TOKEN_SECRET,
+     {
+       expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
+     }
+   );
+ } catch (error) {
+   console.error("Error generating access token:", error);
+ }
 };
 
 export const User = mongoose.model("User", userSchema);
